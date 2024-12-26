@@ -1,23 +1,38 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import Home from './Pages/Home'
-import ErrorPage from './Pages/ErrorPage'
-import Register from './Pages/Register'
-import Login from './Pages/Login'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./Pages/Login";
+import Home from "./Pages/Home";
+import Register from "./Pages/Register";
 import Products from './Pages/Products'
+
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("access_token");
+  return token ? children : <Navigate to="/login" />;
+}
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path='/' element={<Home></Home>}></Route>
-        <Route path='/products' element={<Products></Products>}></Route>
-        <Route path='/login' element={<Login></Login>}></Route>
-        <Route path='/register' element={<Register></Register>}></Route>
-        <Route path='*' element={<ErrorPage></ErrorPage>}></Route>
-      </Routes>
-    </div>
-  )
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products"
+        element={
+          <ProtectedRoute>
+            <Products />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
